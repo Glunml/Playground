@@ -21,12 +21,11 @@ var sphereMaterial  = new THREE.MeshLambertMaterial({ color: 0x00BEC9 })
 var sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 
 //var cube = new THREE.Mesh(cubeGeometry, material );
-var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial)
+//var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial)
 
 //scene.add( cube );
-scene.add( sphere );
-camera.position.y  = -1;
-camera.position.z = 5;
+//scene.add( sphere );
+
 
 // ----------------Adding Light-----------------------
 
@@ -49,31 +48,30 @@ scene.add( light );
 
 //----------------------------------------------------
 
+//-----------3d model from Blender----------------------
+function init(){
+	loader = new THREE.JSONLoader();
+    loader.load( 'cube.json', function ( geometry, materials ) { //第１引数はジオメトリー、第２引数はマテリアルが自動的に取得）
+        var faceMaterial = new THREE.MeshLambertMaterial( materials );
+        json = new THREE.Mesh( geometry, faceMaterial );
+        json.position.set( 0,100,0);
+        json.scale.set( 100, 100, 100 );
+        scene.add( json );
+        } );
+}
+
+
 function render() {
     requestAnimationFrame(render);
 /*
     cube.rotation.x += 0.1;
 	cube.rotation.y += 0.1;
 */	
-	upDown();
-	sphere.position.y = sphere.position.y + speed
+	trackball = new THREE.TrackballControls( camera );
+	//sphere.position.y = sphere.position.y + 0.001
     renderer.render(scene, camera);//ここでRendererを呼んでレンダーしてる
 }
 
-function upDown(){
-	speed = 0.1;
-	var direction = 0.1;
-	
-	for(speed = 0; speed <= 1; speed = speed + 0.01){
-		
-	}
-	
-	if(speed == 1||speed == -1){
-		speed = -speed;
-	}
-	speed = speed * direction;
-	
-	return speed;
-}
 
 render();
+init();
