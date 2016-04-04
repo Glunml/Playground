@@ -17,7 +17,7 @@ void draw(){
   py = height/2 + sin(radians(angle))*(1000);
   
   
-  fill(0);
+  fill(0); 
   rect (px, py, 5, 5);
   stroke(100);
   line(width/2, height/2, px, py);

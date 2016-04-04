@@ -10,18 +10,50 @@ float angle;
 float px, py;
 float pxBezier, pyBezier;
 float frequency = 2;
+int size;
+float bezierInitialPos = height/2;
+float direction = 0.1;
+float randomXpos = random(0,width);
+
+int r,g,b;
+int fadeSpeed = 2;
+
+
 
 
 void setup(){
-  size(1200,800);
+  //size(3240,720);
+  size(1200,300);
+  
   
   minim = new Minim(this);
   player = minim.loadFile("sounds/drum1.wav");
   fft = new FFT( player.bufferSize(), player.sampleRate() );
+  background(0);
 }
 
 void draw(){  
-  background(0);
+  background(r,g,b);
+   if(r <= 0){
+     r=0;
+   }else{
+     r = r - fadeSpeed;
+   }
+   
+   if(g <= 0){
+     g=0;
+   }else{
+     g = g - fadeSpeed;
+   }
+   if(b <= 0){
+     b=0;
+   }else{
+     b = b - fadeSpeed;
+   }
+  print("red = "+ r);
+  
+  
+  //background(10);
   fft.forward( player.mix );
   px = cos(radians(angle))*(1000);
   py = sin(radians(angle))*(1000);
@@ -30,17 +62,41 @@ void draw(){
   
   //rotateY(radians(fft.getBand(30)));
   //noFill();
-  
-  translate(width/2, height/2);
+
+  //translate(width/2, height/2);
   noFill();
+  bezierInitialPos = bezierInitialPos + direction;
   
-  for(int i=0;i<=200;i++){
-    stroke(0,200-i,200-i);
-    bezier( 0, 0, pxBezier, pyBezier, pxBezier, pyBezier ,px+i, py+i);
-    println("pxBezier = " ,pxBezier," pyBezier = " + pyBezier, "px = " + px," py = " + py);
-    //bezier(point1x,point1y,point1BezierX,point1BezierY,point2BezierX,point2BezierY,point2x,point2y)
-  }
-  angle -= frequency;
+  
+    //HIGH
+    stroke(0,200,255);
+    //stroke(255,0,0);
+    bezier(0,height/2,randomXpos+width/2+fft.getBand(0),bezierInitialPos+height/2+fft.getBand(0)*5*random(-1,1),width/2+fft.getBand(0),height/2+fft.getBand(0)*5*random(-1,1),width,height/2);
+    
+    //MIDDLE2
+    stroke(0,150,220);
+    //stroke(0,255,0);
+    bezier(0,height/2,width/2+fft.getBand(125),height/2+fft.getBand(125)*5*random(-1,1),randomXpos+width/2+fft.getBand(125),-bezierInitialPos+height/2+fft.getBand(125)*5*random(-1,1),width,height/2);
+    
+    //MIDDLE1
+    stroke(0,100,180);
+    //stroke(0,255,0);
+    bezier(0,height/2,randomXpos+width/2+fft.getBand(100),height/2+fft.getBand(125)*5*random(-1,1),width/2+fft.getBand(125),bezierInitialPos+height/2+fft.getBand(125)*5*random(-1,1),width,height/2);
+    
+    
+    //BASE
+    stroke(0,50,150);
+    //stroke(0,0,255);
+    bezier(0,height/2,width/2+fft.getBand(255),-bezierInitialPos+height/2+fft.getBand(255)*5*random(-1,1),randomXpos+width/2+fft.getBand(255),height/2+fft.getBand(255)*5*random(-1,1),width,height/2);
+    
+    
+    
+    //println(fft.getBand(512)+"       "+fft.getBand(0));
+    //println();
+    
+    angle -= frequency;
+  
+  
   
   
   //ellipse(0,0,fft.getBand(30)+300+beatAdd,fft.getBand(30)+300+beatAdd);
@@ -59,78 +115,14 @@ void draw(){
   //  sphere(fft.getBand(i));
 
   //}
+  updown();
+
+}
+
+
+void updown(){
+if(bezierInitialPos <= -height/4 || bezierInitialPos >= height/4){
+  direction = -direction;
+}
   
-
-}
-
-void keyPressed(){
-if(key == 'a'){
-   player = minim.loadFile("sounds/drum1.wav");
-   player.play();
- }
-  
-if(key == 's'){
-   player = minim.loadFile("sounds/drum2.wav");
-   player.play();
- }
-  
-if(key == 'q'){
-   player = minim.loadFile("sounds/FirstOfTheYear/1.wav");
-   player.play();
-}
-
-if(key == 'w'){
-   player = minim.loadFile("sounds/FirstOfTheYear/2.wav");
-   player.play();
-}
-
-if(key == 'e'){
-   player = minim.loadFile("sounds/FirstOfTheYear/3.wav");
-   player.play();
-}
-
-if(key == 'r'){
-   player = minim.loadFile("sounds/FirstOfTheYear/4.wav");
-   player.play();
-}
-
-if(key == 't'){
-   player = minim.loadFile("sounds/FirstOfTheYear/5.wav");
-   player.play();
-}
-
-if(key == 'f'){
-   player = minim.loadFile("sounds/voice/1.wav");
-   player.play();
-}
-
-if(key == 'g'){
-   player = minim.loadFile("sounds/voice/2.wav");
-   player.play();
-}
-
-if(key == 'h'){
-   player = minim.loadFile("sounds/voice/3.wav");
-   player.play();
-}
-
-if(key == 'v'){
-   player = minim.loadFile("sounds/voice/4.wav");
-   player.play();
-}
-
-if(key == 'b'){
-   player = minim.loadFile("sounds/voice/5.wav");
-   player.play();
-}
-
-if(key == 'n'){
-   player = minim.loadFile("sounds/voice/3.wav");
-   player.play();
-}
-
-}
-
-void keyReleased(){
-  beatAdd = 0;
 }

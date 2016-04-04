@@ -26,7 +26,7 @@ table {
       <tbody>
         {% for book in books %}
         <tr>
-          <td>{{ book.id }}</td>
+          <td>{{ book.id }}</td> <!--     {{}}     <= これは変数(valuable) -->
           <td>{{ book.name }}</td>
           <td>{{ book.publisher }}</td>
           <td>{{ book.page }}</td>
